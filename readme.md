@@ -5,8 +5,8 @@ This a toy. I try to use it replace windows notebook.
 ![](image/readme/1652449631481.png)
 
 ## feature
-- relative small.
-- simple~~
+- relative small and simple
+- position memory
 - ＞﹏＜
 
 ## Reference
