@@ -1,4 +1,3 @@
-from operator import index
 import time, json
 from tkinter import *
 import tkinter   # 导入tkinter库
@@ -86,7 +85,8 @@ class Todo:  # 定义class类，GUI界面
 
         # 颜色主题菜单的绑定变量
         self.themesvar = IntVar()
-        self.themesvar.set(0)
+        index = list(self.colorthemes.values()).index(self.themecolor)
+        self.themesvar.set(index)
 
         # 创建菜单
         self.setsmenu = Menu(self.root,tearoff=False)
@@ -98,7 +98,7 @@ class Todo:  # 定义class类，GUI界面
         #颜色主题菜单
         self.themesmenu = Menu(self.setsmenu, tearoff = False)
         for i in range(len(self.colorthemes.keys())):
-            self.themesmenu.add_radiobutton(label=list(self.colorthemes.keys())[i],variable=self.themesvar,value=i,command=self.setcolor)   #调用self.setcolor()方法设置所有组件的颜色
+            self.themesmenu.add_radiobutton(label=list(self.colorthemes.keys())[i], variable=self.themesvar, value = i, command = self.setcolor)   #调用self.setcolor()方法设置所有组件的颜色
         self.setsmenu.add_cascade(label = 'Theme',menu = self.themesmenu)
         
         self.root.mainloop()    #窗体进入事件循环
@@ -174,20 +174,12 @@ class Todo:  # 定义class类，GUI界面
 
     #鼠标进入组件事件
     def enter(self,event):
-        event.widget['bg'] = self.themecolor[1]   #背景颜色改变
+        event.widget['bg'] = list(self.colorthemes.values())[self.themesvar.get()][1]   #背景颜色改变
 
     #鼠标离开组件事件
     def leave(self,event):
-        event.widget['bg'] = self.themecolor[0]   #背景颜色还原
+        event.widget['bg'] = list(self.colorthemes.values())[self.themesvar.get()][0]   #背景颜色还原
 
 if __name__ == '__main__':
-    # config = {
-    #     'size':200,
-    #     'x':100,
-    #     'y':100,
-    #     'themecolor':['#FFFACD', '#F0E68C']
-    # }
-    # with open(file = "config.json", mode = 'w', encoding = 'utf-8') as f:
-    #     json.dump(config, f)
     #实例化gui
     Todo() 
