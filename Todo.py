@@ -3,12 +3,14 @@ from tkinter import *
 import tkinter   # 导入tkinter库
 
 class Todo:  # 定义class类，GUI界面
+
     # __init__方法，导入类时自动执行这里的语句
     def __init__(self, size = 200, x = 100, y = 100):
         self.xr = 100
         self.yr = 100
         self.colorthemes = {"yellow":["#FFFACD","#F0E68C"],"blue":["#98F5FF","#00E5EE"],"red":["#E9967A","#EE6363"],"green":["#90ee90","#32CD32"]}  # 主题的字典
         self.size = [200, 300, 400]
+        self.powerboot = 0
         try: 
             with open(file = "config.json", mode = 'r', encoding = 'utf-8') as f:
                 config = json.load(f)
@@ -16,11 +18,12 @@ class Todo:  # 定义class类，GUI界面
             y = config['y']
             size = config['size']
             themecolor = config['themecolor']
+            powerboot = config['powerboot']
         finally:
-            self.setgui(size, x, y, themecolor)
+            self.setgui(size, x, y, themecolor, powerboot)
 
     # GUI界面    
-    def setgui(self, size, x, y, themecolor):
+    def setgui(self, size, x, y, themecolor, powerboot):
         self.root = Tk()     # 窗口
         self.root.title('Todo')    # 窗口标题
         self.root.attributes('-alpha', 0.75)
@@ -28,6 +31,8 @@ class Todo:  # 定义class类，GUI界面
         # self.root.wm_attributes("-topmost", True)   # 窗口总在最前
         self.root.overrideredirect(True)    # 窗口去边框
         self.themecolor = themecolor
+        self.powerboot = IntVar()
+        self.powerboot.set(powerboot)
 
         # 标题栏
         self.titleframe = Frame(self.root, bg = self.themecolor[0], bd = 0)
@@ -91,15 +96,19 @@ class Todo:  # 定义class类，GUI界面
         # 创建菜单
         self.setsmenu = Menu(self.root,tearoff=False)
         self.setsmenu.add_command(label = 'New', command = lambda:Todo(x=self.root.winfo_x()+self.root.winfo_width()+10,y=self.root.winfo_y()))  # 实例化新的gui，新建一个窗口
-        self.setsmenu.add_cascade(label = 'Save', command = self.savecontent)
-        
         self.setsmenu.add_separator()   #添加分隔线
 
-        #颜色主题菜单
+        # 颜色主题菜单
         self.themesmenu = Menu(self.setsmenu, tearoff = False)
         for i in range(len(self.colorthemes.keys())):
-            self.themesmenu.add_radiobutton(label=list(self.colorthemes.keys())[i], variable=self.themesvar, value = i, command = self.setcolor)   #调用self.setcolor()方法设置所有组件的颜色
-        self.setsmenu.add_cascade(label = 'Theme',menu = self.themesmenu)
+            self.themesmenu.add_radiobutton(label = list(self.colorthemes.keys())[i], variable = self.themesvar, value = i, command = self.setcolor)   #调用self.setcolor()方法设置所有组件的颜色
+        self.setsmenu.add_cascade(label = 'Theme', menu = self.themesmenu)
+        
+        # powerboot
+        self.themesmenu = Menu(self.setsmenu, tearoff = False)
+        self.themesmenu.add_radiobutton(label = 'open', variable = self.powerboot, value = 1, command = self.openpowerboot)   # open powerboot
+        self.themesmenu.add_radiobutton(label = 'close', variable = self.powerboot, value = 0, command = self.closepowerboot)   # close powerboot
+        self.setsmenu.add_cascade(label = 'powerboot', menu = self.themesmenu)
         
         self.root.mainloop()    #窗体进入事件循环
 
@@ -125,7 +134,7 @@ class Todo:  # 定义class类，GUI界面
         self.includes = [self.titleframe, self.icon, self.title, self.sets, self.quit, self.text]    # 列出所有组件
         for r in self.includes:
             r.configure(bg = list(self.colorthemes.values())[self.themesvar.get()][0])    # 设置组件的颜色
-        self.saveconfig(self.root.winfo_width())
+        self.saveconfig(size = self.root.winfo_width())
 
     #弹出设置菜单
     def postsetsmenu(self, event):
@@ -157,6 +166,18 @@ class Todo:  # 定义class类，GUI界面
         with open('Notes/{0}.txt'.format(Now), 'w', encoding='utf-8') as f:
             f.write(text)    #写入文件
         self.contentsaved()
+    
+    # C:\Users\Shem\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+    
+    # open powerboot
+    def openpowerboot(self):
+        self.saveconfig(size = self.root.winfo_width())
+        pass
+    
+    # close powerboot
+    def closepowerboot(self):
+        self.saveconfig(size = self.root.winfo_width())
+        pass
 
     #卸载窗体
     def quitapp(self, event):
@@ -167,7 +188,8 @@ class Todo:  # 定义class类，GUI界面
             'size': size,
             'x': self.root.winfo_x(),
             'y': self.root.winfo_y(),
-            'themecolor': list(self.colorthemes.values())[self.themesvar.get()]
+            'themecolor': list(self.colorthemes.values())[self.themesvar.get()],
+            'powerboot': self.powerboot.get()
         }
         with open(file = "config.json", mode = 'w', encoding = 'utf-8') as f:
             json.dump(config, f)
@@ -181,5 +203,16 @@ class Todo:  # 定义class类，GUI界面
         event.widget['bg'] = list(self.colorthemes.values())[self.themesvar.get()][0]   #背景颜色还原
 
 if __name__ == '__main__':
-    #实例化gui
+    # size = 200
+    # config = {
+    #     'size': size,
+    #     'x': 200,
+    #     'y': 200,
+    #     'themecolor': ["#FFFACD","#F0E68C"],
+    #     'powerboot': 0
+    # }
+    # with open(file = "config.json", mode = 'w', encoding = 'utf-8') as f:
+    #     json.dump(config, f)
+    
+    # #实例化gui
     Todo() 

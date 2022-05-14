@@ -1,8 +1,9 @@
-class test:
-    def __init__(self):
-        self.x = 100
-    
-    def setxasparmas(self, x = ):
-        pass
+from tkinter import *
 
-test()
+root = Tk()
+
+powerboot = IntVar()
+powerboot.set(0)
+
+print(powerboot.get())
+root.mainloop()
