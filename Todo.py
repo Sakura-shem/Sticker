@@ -1,4 +1,4 @@
-import time, json, os, win32com.client, tkinter
+import time, json, os, win32com.client, tkinter, sys
 from tkinter import *
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -108,7 +108,12 @@ class Todo:  # 定义class类，GUI界面
         self.themesmenu.add_radiobutton(label = 'open', variable = self.powerboot, value = 1, command = self.openpowerboot)   # open powerboot
         self.themesmenu.add_radiobutton(label = 'close', variable = self.powerboot, value = 0, command = self.closepowerboot)   # close powerboot
         self.setsmenu.add_cascade(label = 'powerboot', menu = self.themesmenu)
-        
+        if self.powerboot.get() == 0:
+            self.closepowerboot()
+        else:
+            self.openpowerboot()
+
+
         # auto save erverday
         scheduler = BackgroundScheduler(timezone='Asia/Shanghai')
         scheduler.add_job(
@@ -183,7 +188,7 @@ class Todo:  # 定义class类，GUI界面
     def openpowerboot(self):
         url = r"C:\Users\Shem\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
         path = os.path.join(url, 'Todo.lnk') # 要生成的快捷方式路径及文件名
-        target = icon = os.path.abspath(__file__) # 要生成快捷方式的原文件路径
+        target = icon = sys.executable # 要生成快捷方式的原文件路径
         shell = win32com.client.Dispatch("WScript.Shell") # 绑定
         shortcut = shell.CreateShortCut(path) # 生成
         shortcut.Targetpath = target # 指定路径
@@ -235,4 +240,5 @@ if __name__ == '__main__':
     #     json.dump(config, f)
     
     # #实例化gui
+    # print(sys.executable)
     Todo() 
