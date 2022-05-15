@@ -1,9 +1,8 @@
-import time, json
+import time, json, os, win32com.client, tkinter
 from tkinter import *
-import tkinter   # 导入tkinter库
+from apscheduler.schedulers.background import BackgroundScheduler
 
 class Todo:  # 定义class类，GUI界面
-
     # __init__方法，导入类时自动执行这里的语句
     def __init__(self, size = 200, x = 100, y = 100):
         self.xr = 100
@@ -68,7 +67,7 @@ class Todo:  # 定义class类，GUI界面
         # 文本区域
         self.text = Text(self.root, font = (10), bd = 0, bg = self.themecolor[0], undo = True, maxundo = 5)
         # 加载数据
-        # todo: 没插入一个字，加一个回调分割。
+        # todo: 每插入一个字，加一个回调分割。
         text = self.load()
         if text != None:
             self.text.insert(tkinter.INSERT, text)
@@ -110,6 +109,18 @@ class Todo:  # 定义class类，GUI界面
         self.themesmenu.add_radiobutton(label = 'close', variable = self.powerboot, value = 0, command = self.closepowerboot)   # close powerboot
         self.setsmenu.add_cascade(label = 'powerboot', menu = self.themesmenu)
         
+        # auto save erverday
+        scheduler = BackgroundScheduler(timezone='Asia/Shanghai')
+        scheduler.add_job(
+            self.saveconfig,
+            trigger = 'cron',
+            second = 1,
+            minute = 1,
+            hour = 1,
+            args = [self.root.winfo_width()]
+        )
+        scheduler.start() 
+
         self.root.mainloop()    #窗体进入事件循环
 
     #下面两个为窗体移动的方法
@@ -168,17 +179,26 @@ class Todo:  # 定义class类，GUI界面
         self.contentsaved()
     
     # C:\Users\Shem\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
-    
     # open powerboot
     def openpowerboot(self):
+        url = r"C:\Users\Shem\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
+        path = os.path.join(url, 'Todo.lnk') # 要生成的快捷方式路径及文件名
+        target = icon = os.path.abspath(__file__) # 要生成快捷方式的原文件路径
+        shell = win32com.client.Dispatch("WScript.Shell") # 绑定
+        shortcut = shell.CreateShortCut(path) # 生成
+        shortcut.Targetpath = target # 指定路径
+        shortcut.IconLocation = icon # 指定图标
+        shortcut.save() # 保存
         self.saveconfig(size = self.root.winfo_width())
-        pass
-    
+
     # close powerboot
     def closepowerboot(self):
+        url = r"C:\Users\Shem\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\Todo.lnk"
+        if os.path.exists(url):
+            os.remove(url)
+        else:
+            pass
         self.saveconfig(size = self.root.winfo_width())
-        pass
-
     #卸载窗体
     def quitapp(self, event):
         self.root.destroy()
