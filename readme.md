@@ -2,7 +2,7 @@
 This a toy. I try to use it replace windows notebook.
 
 ## preview
-![](image/readme/1652449631481.png)
+![](image/readme/1652582975388.png)
 
 ## feature
 - relative small and simple
