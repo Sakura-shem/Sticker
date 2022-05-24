@@ -234,7 +234,7 @@ class Todo:  # 定义class类，GUI界面
             'powerboot': self.powerboot.get()
         }
         print(config)
-        with open(file = self.url + "config.json", mode = 'w', encoding = 'utf-8') as f:
+        with open(file = os.path.join(self.url, "config.json"), mode = 'w', encoding = 'utf-8') as f:
             json.dump(config, f)
 
     #鼠标进入组件事件
