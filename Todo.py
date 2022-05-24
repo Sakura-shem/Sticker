@@ -3,10 +3,9 @@ from tkinter import *
 from apscheduler.schedulers.background import BackgroundScheduler
 
 class Todo:  # 定义class类，GUI界面
-
     # __init__方法，导入类时自动执行这里的语句
     def __init__(self):
-        self.colorthemes = {"yellow":["#FFFACD","#F0E68C"],"blue":["#98F5FF","#00E5EE"],"red":["#E9967A","#EE6363"],"green":["#90ee90","#32CD32"]}  # 主题的字典
+        self.colorthemes = {"yellow":["#FFFACD","#F0E68C"],"Zima blue":["#16B8F3","#00E5EE"],"red":["#E9967A","#EE6363"],"green":["#90ee90","#32CD32"]}  # 主题的字典
         self.size = [200, 300, 400]
         self.powerboot = 0
         self.url = os.getcwd() if sys.executable[-10::1] == 'python.exe' else os.path.dirname(sys.executable)
@@ -118,6 +117,8 @@ class Todo:  # 定义class类，GUI界面
         if self.powerboot.get() == 0:
             self.closepowerboot()
         else:
+            # check the ink
+
             self.openpowerboot()
 
         # auto save erverday
