@@ -178,9 +178,9 @@ class Todo:  # 定义class类，GUI界面
             with open(os.path.join(self.url, 'Notes/{0}.txt'.format(Now)), 'r', encoding="utf-8") as f:
                 text = f.read()
         except Exception as e:
-            url = os.listdir("Notes")
+            url = os.listdir(os.path.join(self.url, 'Notes'))
             if url:
-                with open(os.path.join(self.url, 'Notes/{0}.txt'.format(url[-1])), 'r', encoding="utf-8") as f:
+                with open(os.path.join(self.url, 'Notes/{0}'.format(url[-1])), 'r', encoding="utf-8") as f:
                     text = f.read()
         finally:
             return text
