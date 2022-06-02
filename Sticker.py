@@ -2,7 +2,7 @@ import time, json, os, win32com.client, tkinter, sys, getpass
 from tkinter import *
 from apscheduler.schedulers.background import BackgroundScheduler
 
-class Todo:  # 定义class类，GUI界面
+class sticker:  # 定义class类，GUI界面
     # __init__方法，导入类时自动执行这里的语句
     def __init__(self):
         self.colorthemes = {"yellow":["#FFFACD","#F0E68C"],"Zima blue":["#16B8F3","#00E5EE"],"red":["#E9967A","#EE6363"],"green":["#90ee90","#32CD32"]}  # 主题的字典
@@ -246,4 +246,4 @@ class Todo:  # 定义class类，GUI界面
         event.widget['bg'] = list(self.colorthemes.values())[self.themesvar.get()][0]   #背景颜色还原
 
 if __name__ == '__main__':
-    Todo()
+    sticker()

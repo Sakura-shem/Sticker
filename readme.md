@@ -1,5 +1,5 @@
-# Todo 
- It's a concise tool which you can use to replace windows notebook if you don't need many extra functions other than text recording.
+# Sticker
+ It's a concise desktop sticker if you don't need many extra functions other than text recording.
 
 ## Install
  - Download the packaged file in release.
